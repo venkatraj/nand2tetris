@@ -45,3 +45,6 @@ We use HDL and hardware simulation software to design complex gates. By this way
 After writing code in HDL we use hardware simulation software to compile and test the code.
 
 ## Specification
+Specifications of basic gates such as NAND, Not, AND, OR, XOR, Multiplexor and Demultiplexor and Multi bit version of gates
+
+https://www.electronics-tutorials.ws/combination/comb_2.html
