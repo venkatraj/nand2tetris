@@ -27,3 +27,21 @@ Similarly 5th row is
 7th row is (x AND y AND Not(z))
 
 Interestingly, we can use NAND gate to construct AND, OR and Not gates. So basically, using one NAND gate implementation we can build a computer
+
+### Gate Logic
+A gate is a physical device that implements a boolean function. A electrical (electronics in india) engineer implements basic gates using transistors. A hardware engineer uses them and connects them in variety of ways to create more sophisticated and complex gates.
+
+A gate has been represented by two pharases. Gate interface and gate implementation. Gate interface tells about the boolean function we need and stated mostly in terms of truth table.
+
+A Gate implementation achieves the truth tables by connecting various basic gates. Note that there is multiple ways of achieving this. The rule of thumb is that we should use as much less gates as possible to implement a interface for efficiency.
+
+### Actual Hardware Construction
+We can assemble logic gates using transistors, soldering rod, lead, circuit board, etc. But it is difficult to built a physical gate and then test it to make sure it works correctly. So we found an alternative, easy way to design hardwares
+
+### Hardware Description Language
+We use HDL and hardware simulation software to design complex gates. By this way, we don't have to physically produce any gates, but use programming and software to produce diagram of desired gate, test it and bench mark its efficiency. If all is well, then we can proceed to produce it physically
+
+### Hardware Simulation
+After writing code in HDL we use hardware simulation software to compile and test the code.
+
+## Specification
