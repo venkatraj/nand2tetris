@@ -48,3 +48,42 @@ After writing code in HDL we use hardware simulation software to compile and tes
 Specifications of basic gates such as NAND, Not, AND, OR, XOR, Multiplexor and Demultiplexor and Multi bit version of gates
 
 https://www.electronics-tutorials.ws/combination/comb_2.html
+
+# Boolean Arithmetic
+Adding numbers is a basic operation and is base for other operations such as multiplication.
+
+## Background
+Explains about binary number system. Converting decimal to binary and vice versa. Also explained about *signed* numbers. How 2's compliment is used to represent signed numbers. 2's complement can be calculated by fliping each bit in sequence of bits and then add 1 to it. For example, 5 is represented in binary as `0101`. By flipping bits, it becomes `1010` and by adding one to it, it becomes `1011` which is represented as `-5`
+
+## Specification
+Gives specifications for chips
+
+### Adders
+- HalfAdder 
+- FullAdder
+- Add16 => Adder (16 Bit)
+- Inc16 => Increment by One
+
+### The Arithmetic Logic Unit (ALU)
+Authors carefully designed a simple, elegant and efficient ALU specification which uses two 16bit inputs and one 16bit output and two info bits. Which operation should taken care of by ALU is controlled by six control bits such as
+**Input**
+- x => 16 bit input
+- y => 16 bit input
+- zx => changes input x to zero (if zx == 1)
+- nx => negates input x (if nx == 1)
+- zy => changes input y to zero (if zy == 1)
+- ny => negates input y (if ny == 1)
+- f => function to execute. if f == 1 then out=x+y else out=x&y
+- no => negates the output
+**Output**
+- out => 16 bit output
+- zr => zr is 1, if out == 0
+- ng => ng is 1, if out < 0
+
+## Implementation
+Gives tip and info for implementing above mentioned chips
+
+## Perspective
+Designing an ALU is a trade off. If operations such as multiplication and division are implemnted in hardware, then the cost of hardware become expensive, but is highly efficient and fast.
+
+On the other hand, by implementing a simple ALU such as authors suggest, will result in less expensive chip. Other operations can be taken care by operating system software which will slow down the arithmetics.
