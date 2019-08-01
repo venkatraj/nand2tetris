@@ -15,7 +15,7 @@ For example,
 1. `f(x, y z)` is boolean function
 2. (x + y) . ž
 3. Truth table 
-![image](../../truth-table-1.png)
+![image](images/truth-table-1.png)
 
 **Canonical Representation** Boolean functions can be representated by only using boolean expressions, `and, or and not`
 
@@ -87,3 +87,49 @@ Gives tip and info for implementing above mentioned chips
 Designing an ALU is a trade off. If operations such as multiplication and division are implemnted in hardware, then the cost of hardware become expensive, but is highly efficient and fast.
 
 On the other hand, by implementing a simple ALU such as authors suggest, will result in less expensive chip. Other operations can be taken care by operating system software which will slow down the arithmetics.
+
+# Sequential Logic
+So far we have seen chips such as NAND and ALU that can compute values based on given inputs. However, they can't maintain state. If suppose, we need to add 3 numbers, They can't remember sum of 2 numbers which will be used to add with 3rd number.
+
+The most basic gate that can remember and maintain state is called Flip Flop.
+
+## Background
+**The Clock** Most computers has a clock chip that produces continuous train of alternating signal. i.e 0 and 1 or tick and tock. Both 0 and 1 (or tick and tock) is called one cycle. 
+
+**Flip Flops** A data flip flop is a basic chip that outputs a previous input.
+i.e. `out[t] = in[t-1]`. In other words, let us say the input changes continually based on `clock cycle`, the output of this chip is the input which is happen to be one cycle before current one.
+
+**Registers** A register is a storage device that can `store` a value for desired amount of clock cycles.
+![image](images/1-bit-register.png)
+
+**w-bit Register** `w` stands for word. If we built 16 bit computer, then word size is 16 bits. We can also built 32 and 64. This can be done by combining 1 bit registers
+![image](images/w-bit-register.png)
+
+**Memory Banks** Once we have w-bit registers, we can built arbitrary length of memory banks by combining registers
+![image](images/memory-banks.png)
+
+**Counters** A counter increments an integer number for every clock cycle. Typically, a **Program counter** holds memory address of currently executing instruction. As the time passes, a cycle completed, the `PC` increments its content (i.e. next address) which happen to be location of next instruction
+
+## Specification
+Specification given for the following chips by authors
+- Data Flip Flop
+- Registers
+- Memory
+- Counter
+
+## Implementation
+
+### Data Flip Flop
+This chip is given to us just like NAND chip. We don't need to implement this
+
+### 1 Bit Registers
+This can be implemented using Mux, DFF
+
+### w-Bit Registers
+This can be implemented by arraying up 1 Bit Registers
+
+### Memory Banks
+Once we have w-Bit Registers, we can built any arbitrary length of Memory banks using Mux, array of w-Bit Registers and DMux
+
+### Counters
+This can be implmented in the same way ALU is implemented.
