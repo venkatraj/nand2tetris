@@ -133,3 +133,54 @@ Once we have w-Bit Registers, we can built any arbitrary length of Memory banks 
 
 ### Counters
 This can be implmented in the same way ALU is implemented.
+
+# Machine Language
+So far we developed basic gates and ALU. ALU is capable of doing arithmatic and logic operations for given binary input. And we built sequential logic gates which is capable of remembering state. Generally, computers store a set of binary inputs (a.k.a machine language program) using sequantial logics gates and execute the program instruction by instruction using Program Counter.
+
+So it is necessary to understand what a machine language is, how to program using it and how our hardware interprets and reacts to it. Only then we can be able to built a complete computer.
+
+## Background
+To understand machine language in isolation, we can abstract hardware platform and only use three main abstractions such as a processor, memory and registers
+
+### Machines
+A machine language can be viewed as an agreed-upon formalism, designed to manipulate a memory using a processor and a set of registers.
+
+### Languages
+In a 16bit computer, a typical instruction will look like this `1010001100011001` which may consist of four 4bit information such as operation, and operands. For example, it may read as ADD, R1, R2, R3
+This instruction adds content of R1 (RAM register 1) and R2 and then store it in R3. In certain context, it well may mean a 16 bit memory address.
+
+The symbolic representation (ADD) is called `MNEMONICS`. Since it is difficult to write programs using 0s and 1s, we use symbolic representation and then a software called `assembler` will translate this symbolic code into binary instructions.
+
+### Commands
+There are few types of commands
+**Arthimetic and logic operations** As we saw earlier, it goes like this
+```
+ADD R2,R1,R3 // R2 <- R1+R3 where R1, R2 and R3 are registers
+AND R1,R1,R2 // R1 <- bit wise AND of R1 and R2
+```
+Another type of command is **Memory Addressing** which comes in 3 flavors
+*Direct Addressing* Which is used to directly address memory locations
+```
+LOAD R1,67 // R1 <- Memory[67]
+// Or assume bar has address of Memory[67]
+LOAD R1,bar // R1 <- Memory[67]
+```
+
+*Immediate Addressing* Used to load constant to a memory location
+```
+LOADI R1,67 // R1 <- 67
+```
+
+*Indirect Addressing* In this type of command, we are not directly coding memory address, instead we use memory location that holds address (like `c` pointers)
+```
+// Translation of x = foo[j] or x = *(foo+j);
+ADD R1,foo,j // R1 <- foo + j
+LOAD* R2, R1 // R2 <- Memory[R1]
+STR R2, x // x <- R2
+```
+
+
+
+
+
+
