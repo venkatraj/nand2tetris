@@ -178,9 +178,62 @@ ADD R1,foo,j // R1 <- foo + j
 LOAD* R2, R1 // R2 <- Memory[R1]
 STR R2, x // x <- R2
 ```
+**Flow Control**
+![image](images/flow-control.png)
 
 
+## Hack Machine Language Specification
 
+### Overview
+The Hack computer is a von Neumann platform. It is a 6-bit machine, consisting of a CPU, two separate memory modules serving as instruction memory and data memory, and two  memory-mapped I/O devices: a screen and a keyboard.
 
+**Memory Address Spaces** There are two different memory spaces. ROM and RAM. ROM is used to store program and RAM is used to store data.
 
+**Registers**
+There are three registers `A, D and M` `A` is a register that stores aboth address and data depends on instruction context.
+`D` stores data. `M` stores a value of a memory location whose address is in `A`
+If we need to access data in memory location 512, then first we need to loadd that address in A and then use M which now have data in 512
+```
+@512 // A points to RAM[512]
+D=M // M is value of RAM[512]
+```
+
+### The A-Instruction
+It is used to store 2 types of 15 bit value (most significant bit is not used)
+When we say `@100` we are storing the constant 100 in A register. When we say `@sum` we are referring to some memory location. When use it for first time, it is like variable declaration. It finds some free memory space and tag it as `sum`. In subsequent uses, it refers to the value stored in that memory space.
+
+### The C Instruction
+This code specifies three operations 
+1. What to compute
+2. Where to store the computed value
+3. What to do next
+`dest = comp;jump` *dest* and *jump* are optional
+![image](images/c-instruction.png)
+
+The 7 `comp` bits can represent 128 operations
+And `dest` as follows
+![image](images/c-instruction-dest.png)
+
+And `jump` as follow
+![image](images/c-instruction-jump.png)
+
+**Conflicting Uses of the A Register** As was just  illustrated, the programmer can use the A register to select either a data memory location for a subsequent  C-instruction involving M, or an instruction memory location for a subsequent C-instruction involving a jump. Thus, to prevent conflicting use of the A register, in well-written programs a C-instruction that may cause a  jump (i.e., with some non-zero j bits) should not contain a reference to M, and vice versa.
+
+### Symbols
+Assembly commands can address memory locations either using constants or symbols
+
+#### Predefined symbols
+A special subset of RAM address can be specified using predefined symbols. There are 5 types of such symbols
+1. *Virtual registers* R0 to R15 refers to RAM addresses 0 to 15
+2. *Predefined Pointers* Symbols `SP, LCL, ARG, THIS and THAT` refers to RAM address 0 to 4. So 0 can be refered using SP and R0 and so on upto 4.
+3. *I/O pointers* Display pixels are mapped to a block of memory space and Keyboard input are stored in a single register. Each of this are referred by `SCREEN` and `KBD`
+4. *Label symbols* we can specify a memory address of an instruction using a user defined symbol called label. It is used in GOTO (jump) commands
+5. *Variable symbols* a user defined symbol used to refer a memory location
+
+### Input / Output Handling
+#### Screen
+In hack computer a display consist of 256 rows of 512 pixels per row. So we need 32 consecutive 16bit registers to represent a row. In total we need 8K memory space to present display pixels of 256x512
+
+#### Keyboard
+In Hack computer a single 16 bit register is used to store whatever key is pressed by user at a time.
 
