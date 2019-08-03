@@ -12,3 +12,56 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+  // while(true) {
+  //   kbd = listen()
+  //   if (kbd) {
+  //     draw()
+  //   } else {
+  //     clear()
+  //   }
+  // }
+
+  (LOOP)  
+  @8192
+  D = A
+  @R0
+  M = D
+
+  @KBD
+  D = M
+  @DRAW
+  D;JGT
+  @CLEAR
+  D;JEQ
+
+
+  (DRAW)
+  @R0
+  D = M
+  @SCREEN
+  A = A + D
+  M = -1
+  D = D - 1
+  @R0
+  M = D
+
+  @LOOP
+  D;JLT
+  @DRAW
+  0;JMP
+
+  (CLEAR)
+  @R0
+  D = M
+  @SCREEN
+  A = A + D
+  M = 0
+  D = D - 1
+  @R0
+  M = D
+
+  @LOOP
+  D;JLT
+  @CLEAR
+  0;JMP
