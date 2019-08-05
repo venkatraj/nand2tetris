@@ -331,3 +331,14 @@ The hack ROM consists of 32K addressable 16 bit registers
 
 ### Computer
 Consist of ROM, RAM and CPU
+
+## Implementation
+### RAM
+![image](images/ram-implementation-1.png)
+![image](images/ram-implementation-2.png)
+
+### Computer
+![image](images/computer-implementation.png)
+
+### CPU
+![image](images/cpu-implementation.png)
