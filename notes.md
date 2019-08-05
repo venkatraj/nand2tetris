@@ -294,4 +294,40 @@ Keeps track of address of next instruction to be fetched and executed. Content o
 ### Input and Output
 Input and Output devices are represented using memory mapping technique. For example, each pixel in display in represented by a memory register. Also pressed key or mouse position is stored in binary form in register. Like wise many types of input and output devices and its information (binary data to world information) are mapped to memory locations. 
 
+## The Hack Hardware Platform Specification
+### Overview
+The Hack platform is a 16 bit von Neumann machine. It has a
+- CPU
+- ROM (instruction memory)
+- RAM (Data memory and IO memory maps)
 
+The `HACK CPU` consists of
+- ALU
+- A register
+- D register
+- Program Counter
+
+If the instruction is (a instruction) in `0vvv...vvv` format (v is either 0 or 1) then it is either address or constant and loaded in to `A register`
+
+If the instruction is c instruction in `111accccccdddjjj` format then `a` and `c` bits instruct ALU to computer particular function, `d` bits decides result storage designation and `j` bits decides whether a conditional jump is needed.
+
+### Central Processing Unit
+![image](images/cpu-specification.png)
+
+### Instruction Memory
+The hack ROM consists of 32K addressable 16 bit registers
+![image](images/ROM-specification.png)
+
+
+### Data Memory
+**Data**
+16K memory chip we already built
+
+**Screen**
+![image](images/screen-specification.png)
+
+**Keyboard**
+![image](images/keyboard-specification.png)
+
+### Computer
+Consist of ROM, RAM and CPU
