@@ -237,3 +237,12 @@ In hack computer a display consist of 256 rows of 512 pixels per row. So we need
 #### Keyboard
 In Hack computer a single 16 bit register is used to store whatever key is pressed by user at a time.
 
+
+# Computer Architecture
+In this chapter we are going to build a minimal yet surprisingly powerful computer using the chips we created in last 4 chapters. Computer follow Von Neumann architecture which is the underlying design for almost all modern computers.
+
+The "Hack" computer is simple in the sense it can be constructed in few hours using previously built chips
+
+It is also powerful, in the sense it can illustrate key operating principles and hardware elements of any digital computer
+
+## 
