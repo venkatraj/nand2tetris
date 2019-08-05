@@ -40,4 +40,26 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    Not(in=instruction[15], out=aInstructionLoader);
+
+    Or(a=instruction[11], b=instruction[11], out=zxIn);
+    Or(a=instruction[10], b=instruction[10], out=nxIn);
+    Or(a=instruction[9], b=instruction[9], out=zyIn);
+    Or(a=instruction[8], b=instruction[8], out=nyIn);
+    Or(a=instruction[7], b=instruction[7], out=fIn);
+    Or(a=instruction[6], b=instruction[6], out=noIn);
+    Or(a=instruction[9], b=instruction[9], out=zyIn);
+
+    // Input to A
+    Register(in=instruction, load=aInstructionLoader, out=aRegisterOut);
+
+    // ALU
+    ALU(x=aluIn1, y=aluIn2, 
+        zx=zxIn, nx=nxIn, zy=zyIn, ny=nyIn, f=fIn, no=noIn, out=aluOut, 
+        zr=zrOut, ng=ngOut);
+
+    And(a=instruction[0], b=instruction[1], out=j0Andj1);
+    And(a=j0Andj1, b=instruction[2], out=noJump);
+
+    PC(in=aRegisterOut, load=jump, inc=noJump, reset=reset, out=pcOut);
 }
