@@ -245,4 +245,53 @@ The "Hack" computer is simple in the sense it can be constructed in few hours us
 
 It is also powerful, in the sense it can illustrate key operating principles and hardware elements of any digital computer
 
-## 
+## Background
+
+### The Stored Program Concept
+Stored program concept is formulated independently by several mathematicians in the 1930s. It is the base for digital computer's versatility and make it perform different tasks such as games to word processing to scientific calculations with finite hardware.
+
+### The Von Neumann Architecture.
+Stored program concept is a key element in both abstract and practical computer models. `The turing machine` is an abstract artifact describing a simple computer Where as 'von neumann machine` is a practical architecture and conceptual blueprint for allmost all modern computers.
+
+The von Neumann architecture has memory which is used to store program and data. CPU which is responsible with interacting with memory, input and output devices as well as execute stored program
+
+### Memory
+In von Neumann architecture memory holds two types of information. Data and programming instructions
+
+**Data memory** High level programming languages manipulate data using variables, array and objects. When translated into machine language these become series of bits and stored in data memory
+
+**Instruction memory** High level programming commands are translated to machine language and represented in binary. These bits are encoded desired operation which is decoded and executed by CPU
+
+### Central Processing Unit
+CPU, reads instruction from memory, executes them. Performs operations as instructed by program instruction, reads and writes values to memory, changes program flow, if needed. These are done using three main hardware elements
+- ALU
+- a set of registers
+- a control unit
+CPU operates in a repeated loop. Fetch instruction, decode and execute it. Repeat again for next instruction and so on.
+
+
+**Arithmetic Logic Unit**
+Responsible for performing all the low level arithmatic and logical operations
+
+**Registers**
+ALU is designed to carry out simple calculations. Instead of storing the result of such calculations in RAM (which is time consuming to access and read), CPU uses registers which holds a single word.
+
+**Control Unit**
+A computer instruction can be 16, 32 or 64 bit wide depending on architecture. Before executing, it must be decoded (separate operation, designation, etc) This is done by Control unit.
+
+### Registers
+As said earlier, memory access is slow. Because CPU as to tell memory address which needs to travel in address bus, then memory access logic selects memory register and place data in data bus and it travels to CPU.
+
+Registers are quick as it resides within CPU. No need to set request via address bus and receive data via data bus.
+
+**Data registers** used as short term memory to store results.
+
+**Addressing registers** Used to store memory address and use it to read and write data from RAM
+
+**Program counter register**
+Keeps track of address of next instruction to be fetched and executed. Content of PC changes either incrementally or jump to specific instruction depends on result of currely executed instruction
+
+### Input and Output
+Input and Output devices are represented using memory mapping technique. For example, each pixel in display in represented by a memory register. Also pressed key or mouse position is stored in binary form in register. Like wise many types of input and output devices and its information (binary data to world information) are mapped to memory locations. 
+
+
