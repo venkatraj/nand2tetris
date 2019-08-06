@@ -58,21 +58,6 @@ CHIP CPU {
     Mux16(a=aluOut, b=instruction, sel=aInstruction, out=aRegisterIn);
     ARegister(in=aRegisterIn, load=writeA, out=aRegisterOut);
     Or16(a=aRegisterOut, b=aRegisterOut, out=addressM);
-    // Or(a=aRegisterOut1[0], b=aRegisterOut1[0], out=addressM[0]);
-    // Or(a=aRegisterOut1[1], b=aRegisterOut1[1], out=addressM[1]);
-    // Or(a=aRegisterOut1[2], b=aRegisterOut1[2], out=addressM[2]);
-    // Or(a=aRegisterOut1[3], b=aRegisterOut1[3], out=addressM[3]);
-    // Or(a=aRegisterOut1[4], b=aRegisterOut1[4], out=addressM[4]);
-    // Or(a=aRegisterOut1[5], b=aRegisterOut1[5], out=addressM[5]);
-    // Or(a=aRegisterOut1[6], b=aRegisterOut1[6], out=addressM[6]);
-    // Or(a=aRegisterOut1[7], b=aRegisterOut1[7], out=addressM[7]);
-    // Or(a=aRegisterOut1[8], b=aRegisterOut1[8], out=addressM[8]);
-    // Or(a=aRegisterOut1[9], b=aRegisterOut1[9], out=addressM[9]);
-    // Or(a=aRegisterOut1[10], b=aRegisterOut1[10], out=addressM[10]);
-    // Or(a=aRegisterOut1[11], b=aRegisterOut1[11], out=addressM[11]);
-    // Or(a=aRegisterOut1[12], b=aRegisterOut1[12], out=addressM[12]);
-    // Or(a=aRegisterOut1[13], b=aRegisterOut1[13], out=addressM[13]);
-    // Or(a=aRegisterOut1[14], b=aRegisterOut1[14], out=addressM[14]);
 
     // ALU
     Mux16(a=aRegisterOut, b=inM, sel=instruction[12], out=aluIn2);
@@ -86,7 +71,9 @@ CHIP CPU {
     // Decides Increment Flag
     Or(a=instruction[0], b=instruction[1], out=j0Orj1);
     Or(a=j0Orj1, b=instruction[2], out=j0Orj1OrJ2);
-    Not(in=j0Orj1OrJ2, out=noJump);
+    Not(in=j0Orj1OrJ2, out=noJumpBits);
+    Not(in=jump, out=notJump);
+    Or(a=noJumpBits, b=notJump, out=noJump);
     Or(a=noJump, b=aInstruction, out=incFlag);
 
     // Jump if ALU output is greater than zero
