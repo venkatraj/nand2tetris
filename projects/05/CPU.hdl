@@ -35,88 +35,65 @@ CHIP CPU {
 
     OUT outM[16],        // M value output
         writeM,          // Write to M? 
-        addressM[16],    // Address in data memory (of M)
-        pc[16];          // address of next instruction
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    // Type of Instruction
     Not(in=instruction[15], out=aInstruction);
-    Or(a=instruction[15], b=instruction[15], out=cInstruction);
+    Not(in=aInstruction, out=cInstruction);
+
     And(a=instruction[4], b=cInstruction, out=writeD);
     And(a=instruction[3], b=cInstruction, out=writeM);
     And(a=instruction[5], b=cInstruction, out=cInstructionADest);
     Or(a=cInstructionADest, b=aInstruction, out=writeA);
 
-    Or(a=instruction[11], b=instruction[11], out=zxIn);
-    Or(a=instruction[10], b=instruction[10], out=nxIn);
-    Or(a=instruction[9], b=instruction[9], out=zyIn);
-    Or(a=instruction[8], b=instruction[8], out=nyIn);
-    Or(a=instruction[7], b=instruction[7], out=fIn);
-    Or(a=instruction[6], b=instruction[6], out=noIn);
-
     // Input to A
     Mux16(a=aluOut, b=instruction, sel=aInstruction, out=aRegisterIn);
     ARegister(in=aRegisterIn, load=writeA, out=aRegisterOut);
-    Or16(a=aRegisterOut, b=aRegisterOut, out=addressM);
+    Or16(a=false, b=aRegisterOut, out[0..14]=addressM);
 
     // ALU
     Mux16(a=aRegisterOut, b=inM, sel=instruction[12], out=aluIn2);
     ALU(x=dRegisterout, y=aluIn2, 
-        zx=zxIn, nx=nxIn, zy=zyIn, ny=nyIn, f=fIn, no=noIn, out=aluOut, 
+        zx=instruction[11], nx=instruction[10], zy=instruction[9], 
+        ny=instruction[8], f=instruction[7], no=instruction[6], 
+        out=aluOut, 
         zr=zrOut, ng=ngOut);
 
     // Input to D
     DRegister(in=aluOut, load=writeD, out=dRegisterout);
 
-    // Decides Increment Flag
-    Or(a=instruction[0], b=instruction[1], out=j0Orj1);
-    Or(a=j0Orj1, b=instruction[2], out=j0Orj1OrJ2);
-    Not(in=j0Orj1OrJ2, out=noJumpBits);
-    Not(in=jump, out=notJump);
-    Or(a=noJumpBits, b=notJump, out=noJump);
-    Or(a=noJump, b=aInstruction, out=incFlag);
+    // Output flags
+    Not(in=ngOut, out=notNegative);
+    Not(in=zrOut, out=notZero);
 
     // Jump if ALU output is greater than zero
-    Or(a=zrOut, b=ngOut, out=zrOutOrngOut);
-    Not(in=zrOutOrngOut, out=GTZ);
+    And(a=notZero, b=notNegative, out=GTZ);
     And(a=GTZ, b=instruction[0], out=JGT);
 
     // Jump if ALU output is zero
     And(a=zrOut, b=instruction[1], out=JEQ);
 
     // Jump if ALU output is greater than or equal to zero
-    Not(in=ngOut, out=notNagative);
-    Not(in=zrOut, out=notZero);
-    And(a=notNagative, b=notZero, out=greaterThanZero);
-    And(a=notNagative, b=zrOut, out=equalToZero);
-    And(a=greaterThanZero, b=equalToZero, out=GE);
-    And(a=instruction[0], b=instruction[1], out=j0Andj1);
-    And(a=j0Andj1, b=GE, out=JGE);
+    Or(a=JGT, b=JEQ, out=JGE);
 
     // Jump if ALU output is less than Zero
     And(a=ngOut, b=instruction[2], out=JLT);
 
     // Jump if ALU output is not equal to zero
-    And(a=instruction[0], b=instruction[2], out=j0Andj2);
-    And(a=notZero, b=j0Andj2, out=JNE);
+    Or(a=JGT, b=JLT, out=JNE);
 
     // Jump if ALU output is less than or equal to zero
-    And(a=ngOut, b=notZero, out=lessThanZero);
-    And(a=lessThanZero, b=equalToZero, out=JLE);
+    Or(a=JEQ, b=JLT, out=JLE);
+    Or(a=JGE, b=JLT, out=JMP);
 
-    // Unconditional Jump
-    And(a=j0Andj1, b=instruction[2], out=JMP);
+    And(a=cInstruction, b=JMP, out=jumpFlag);
 
-    // Is there a jump needed?
-    Or(a=JGT, b=JEQ, out=JGTorJEQ);
-    Or(a=JGE, b=JLT, out=JGEorJLT);
-    Or(a=JNE, b=JLE, out=JNEorJLE);
-    Or(a=JGTorJEQ, b=JGEorJLT, out=JGTorJEQorJGEorJLT);
-    Or(a=JGTorJEQorJGEorJLT, b=JNEorJLE, out=conditionalJump);
-    Or(a=conditionalJump, b=JMP, out=jump);
-    And(a=cInstruction, b=jump, out=jumpFlag);
+    // Decides Increment Flag
+    Not(in=jumpFlag, out=incFlag);
 
-    PC(in=aRegisterOut, load=jumpFlag, inc=incFlag, reset=reset, out=pc);
+    PC(in=aRegisterOut, load=jumpFlag, inc=incFlag, reset=reset, out[0..14]=pc);
 
-    Or16(a=aluOut, b=aluOut, out=outM);
+    Or16(a=false, b=aluOut, out=outM);
 }
