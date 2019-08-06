@@ -76,11 +76,40 @@ CHIP CPU {
     // Jump if ALU output is greater than zero
     Or(a=zrOut, b=ngOut, out=zrOutOrngOut);
     Not(in=zrOutOrngOut, out=JGT);
-    
-    // Jump if alu output is zero
+
+    // Jump if ALU output is zero
     And(a=zrOut, b=instruction[1], out=JEQ);
 
+    // Jump if ALU output is greater than or equal to zero
+    Not(in=ngOut, out=notNagative);
+    Not(in=zrOut, out=notZero);
+    And(a=notNagative, b=notZero, out=greaterThanZero);
+    And(a=notNagative, b=zrOut, out=equalToZero);
+    And(a=greaterThanZero, b=equalToZero, out=JGE);
 
+    // Jump if ALU output is less than Zero
+    And(a=ngOut, b=instruction[2], out=JLT);
 
-    PC(in=aRegisterOut, load=jump, inc=incFlag, reset=reset, out=pcOut);
+    // Jump if ALU output is not equal to zero
+    And(a=instruction[0], b=instruction[2], out=j0Andj2);
+    And(a=notZero, b=j0Andj2, out=JNE);
+
+    // Jump if ALU output is less than or equal to zero
+    And(a=ngOut, b=notZero, out=lessThanZero);
+    And(a=notNagative, b=zrOut, out=equalToZero);
+    And(a=lessThanZero, b=equalToZero, out=JLE);
+
+    // Unconditional Jump
+    And(a=instruction[0], b=instruction[1], out=j0Andj1);
+    And(a=j0Andj1, b=instruction[2], out=JMP);
+
+    // Is there a jump needed?
+    Or(a=JGT, b=JEQ, out=JGTorJEQ);
+    Or(a=JGE, b=JLT, out=JGEorJLT);
+    Or(a=JNE, b=JLE, out=JNEorJLE);
+    Or(a=JGTorJEQ, b=JGEorJLT, out=JGTorJEQorJGEorJLT);
+    Or(a=JGTorJEQorJGEorJLT, b=JNEorJLE, out=conditionalJump);
+    Or(a=conditionalJump, b=JMP, out=jumpFlag);
+
+    PC(in=aRegisterOut, load=jumpFlag, inc=incFlag, reset=reset, out=pcOut);
 }
