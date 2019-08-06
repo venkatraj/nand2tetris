@@ -40,7 +40,11 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
-    Not(in=instruction[15], out=aInstructionLoader);
+    Not(in=instruction[15], out=aInstruction);
+    Or(a=instruction[15], b=instruction[15], out=cInstruction)
+    Or(a=instruction[4], b=instruction[4], out=writeD)
+    Or(a=instruction[3], b=instruction[3], out=writeM)
+    Or(a=instruction[2], b=aInstruction, out=writeA)
 
     Or(a=instruction[11], b=instruction[11], out=zxIn);
     Or(a=instruction[10], b=instruction[10], out=nxIn);
@@ -51,15 +55,32 @@ CHIP CPU {
     Or(a=instruction[9], b=instruction[9], out=zyIn);
 
     // Input to A
-    Register(in=instruction, load=aInstructionLoader, out=aRegisterOut);
+    Mux16(a=aluOut, b=instruction, sel=aInstruction, out=aRegisterIn);
+    ARegister(in=aRegisterIn, load=writeA, out=aRegisterOut);
+    Or(a=aRegisterOut, b=aRegisterOut, out=addressM);
 
     // ALU
-    ALU(x=aluIn1, y=aluIn2, 
+    Mux16(a=aRegisterOut, b=inM, sel=cInstruction, out=aluIn2);
+    ALU(x=dRegisterout, y=aluIn2, 
         zx=zxIn, nx=nxIn, zy=zyIn, ny=nyIn, f=fIn, no=noIn, out=aluOut, 
         zr=zrOut, ng=ngOut);
 
-    And(a=instruction[0], b=instruction[1], out=j0Andj1);
-    And(a=j0Andj1, b=instruction[2], out=noJump);
+    // Input to D
+    DRegister(in=aluOut, load=writeD, out=dRegisterout);
 
-    PC(in=aRegisterOut, load=jump, inc=noJump, reset=reset, out=pcOut);
+    // Decides Increment Flag
+    Or(a=instruction[0], b=instruction[1], out=j0Orj1);
+    Or(a=j0Orj1, b=instruction[2], out=j0Orj1OrJ2);
+    Not(in=j0Orj1OrJ2, out=incFlag);
+
+    // Jump if ALU output is greater than zero
+    Or(a=zrOut, b=ngOut, out=zrOutOrngOut);
+    Not(in=zrOutOrngOut, out=JGT);
+    
+    // Jump if alu output is zero
+    And(a=zrOut, b=instruction[1], out=JEQ);
+
+
+
+    PC(in=aRegisterOut, load=jump, inc=incFlag, reset=reset, out=pcOut);
 }
